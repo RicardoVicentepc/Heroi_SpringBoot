@@ -1,9 +1,6 @@
 package com.example.demo;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -28,21 +25,22 @@ public class HeroiController {
     }
 
     private ArrayList<Heroi> heroiList = new ArrayList<>();
-    @GetMapping("cadastrar/{nome}/{habilidade}/{idade}/{forca}/{vivo}")
-    public void cadastrar(@PathVariable String nome, @PathVariable String habilidade, @PathVariable Integer idade, @PathVariable Double forca, @PathVariable Boolean vivo){
-        heroiList.add(new Heroi(nome, habilidade, idade, forca, vivo));
-        System.out.println("Heroi Cadastrado Com sucesso.");
+    @PostMapping
+    public void cadastrar(@RequestBody Heroi novoHeroi){
+        heroiList.add(novoHeroi);
+        System.out.println("Heroi Cadastrado com sucesso.");
     }
-    @GetMapping("atualizar/{indice}/{nome}/{habilidade}/{idade}/{forca}/{vivo}")
-    public void atualizar(@PathVariable int indice, @PathVariable String nome, @PathVariable String habilidade, @PathVariable Integer idade, @PathVariable Double forca, @PathVariable Boolean vivo){
+
+    @PutMapping("{indice}")
+    public void atualizar(@PathVariable int indice, @RequestBody Heroi heroiAtualizar ){
         if(indiceValido(indice)) {
-            heroiList.set(indice, new Heroi(nome, habilidade, idade, forca, vivo));
-            System.out.println("Heroi Cadastrado Com sucesso.");
+            heroiList.set(indice, heroiAtualizar);
+            System.out.println("Heroi atualizado com sucesso.");
             return;
         }
         System.out.println("Herói não encontrado");
     }
-    @GetMapping("remover/{indice}")
+    @DeleteMapping("{indice}")
     public String remover(@PathVariable int indice){
         if(indiceValido(indice)){
             heroiList.remove(indice);
